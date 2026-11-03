@@ -1,0 +1,428 @@
+/* Compact icon-only Start Chat button next to the Google Account icon */
+mw-fab-link.start-chat {
+  margin: 0 6px 0 0 !important;
+  flex-shrink: 0 !important;
+}
+
+mw-fab-link.start-chat .fab.link,
+mw-fab-link.start-chat .fab.mat-mdc-button {
+  width: 34px !important;
+  min-width: 34px !important;
+  height: 34px !important;
+  min-height: 34px !important;
+  padding: 0 !important;
+  border-radius: 50% !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.14), 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+}
+
+mw-fab-link.start-chat .fab-icon-label-container {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+mw-fab-link.start-chat .fab-icon,
+mw-fab-link.start-chat .fab-icon svg {
+  width: 20px !important;
+  height: 20px !important;
+  display: block !important;
+}
+
+mw-fab-link.start-chat .fab-label {
+  display: none !important;
+}
+
+/* Hide in header when navigating away from conversations (e.g. Settings) */
+mw-g-ui-container:not(:has(.main-container)) mw-branded-header mw-fab-link.start-chat {
+  display: none !important;
+}
+
+/* Slightly tighten header left margin so narrow sidebars have plenty of room */
+mw-branded-header .menu {
+  margin-left: 8px !important;
+}
+
+/* ==========================================================================
+   Pinned Avatar Rail ("Sidebar-within-a-Sidebar") on Conversation Pages
+   ========================================================================== */
+
+/* Keep the conversation list mounted as a 56px vertical icon rail on chat pages */
+.main-container:not(.main-page) mw-main-nav.main-nav {
+  display: flex !important;
+  flex-direction: column !important;
+  width: 56px !important;
+  min-width: 56px !important;
+  max-width: 56px !important;
+  flex: 0 0 56px !important;
+  height: 100% !important;
+  border-right: 1px solid rgba(128, 134, 139, 0.22) !important;
+  overflow: hidden !important;
+  z-index: 10 !important;
+}
+
+/* Ensure the active conversation pane flexes cleanly to fill the remaining width */
+.main-container:not(.main-page) > :not(mw-main-nav):not(router-outlet) {
+  flex: 1 1 0% !important;
+  min-width: 0 !important;
+  max-width: calc(100% - 56px) !important;
+}
+
+/* Hide top banners/headers inside the collapsed icon rail */
+.main-container:not(.main-page) mw-main-nav .main-nav-header,
+.main-container:not(.main-page) mw-main-nav mw-main-nav-toolbar {
+  display: none !important;
+}
+
+/* Scrollable vertical icon list (pinned independently from chat message scroll) */
+.main-container:not(.main-page) mw-main-nav mws-conversations-list,
+.main-container:not(.main-page) mw-main-nav .conversation-list {
+  width: 100% !important;
+  height: 100% !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  scrollbar-width: none !important;
+}
+
+.main-container:not(.main-page) mw-main-nav .conversation-list::-webkit-scrollbar {
+  width: 0 !important;
+  height: 0 !important;
+}
+
+.main-container:not(.main-page) mw-main-nav .conv-container {
+  padding: 6px 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 2px !important;
+}
+
+.main-container:not(.main-page) mw-main-nav mws-conversation-list-item {
+  width: 100% !important;
+  display: flex !important;
+  justify-content: center !important;
+}
+
+/* Compact each conversation row down to just its centered avatar */
+.main-container:not(.main-page) mw-main-nav mws-conversation-list-item .list-item {
+  width: 48px !important;
+  height: 48px !important;
+  min-height: 48px !important;
+  padding: 0 !important;
+  margin: 0 auto !important;
+  border-radius: 12px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  position: relative !important;
+  box-sizing: border-box !important;
+  transition: background-color 0.15s ease, transform 0.1s ease !important;
+}
+
+/* Hide name, snippet, timestamp, and 3-dot hover menu in the icon rail */
+.main-container:not(.main-page) mw-main-nav mws-conversation-list-item .text-content,
+.main-container:not(.main-page) mw-main-nav mws-conversation-list-item .list-item-info,
+.main-container:not(.main-page) mw-main-nav mws-conversation-list-item .list-item-menu {
+  display: none !important;
+}
+
+.main-container:not(.main-page) mw-main-nav mws-conversation-list-item .avatar-container {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin: 0 !important;
+  position: relative !important;
+}
+
+/* Active conversation highlight in the icon rail */
+.main-container:not(.main-page) mw-main-nav mws-conversation-list-item .list-item.selected,
+.main-container:not(.main-page) mw-main-nav mws-conversation-list-item .list-item[aria-selected="true"] {
+  background-color: rgba(26, 115, 232, 0.18) !important;
+  border-radius: 12px !important;
+}
+
+/* Left accent indicator pill on the active conversation */
+.main-container:not(.main-page) mw-main-nav mws-conversation-list-item .list-item.selected::after,
+.main-container:not(.main-page) mw-main-nav mws-conversation-list-item .list-item[aria-selected="true"]::after {
+  content: "" !important;
+  display: block !important;
+  position: absolute !important;
+  left: -4px !important;
+  top: 10px !important;
+  bottom: 10px !important;
+  width: 4px !important;
+  height: auto !important;
+  border-radius: 0 4px 4px 0 !important;
+  background-color: #1a73e8 !important;
+}
+
+body.dark-theme .main-container:not(.main-page) mw-main-nav mws-conversation-list-item .list-item.selected,
+body.dark-theme .main-container:not(.main-page) mw-main-nav mws-conversation-list-item .list-item[aria-selected="true"] {
+  background-color: rgba(138, 180, 248, 0.22) !important;
+}
+
+body.dark-theme .main-container:not(.main-page) mw-main-nav mws-conversation-list-item .list-item.selected::after,
+body.dark-theme .main-container:not(.main-page) mw-main-nav mws-conversation-list-item .list-item[aria-selected="true"]::after {
+  background-color: #8ab4f8 !important;
+}
+
+/* Subtle ring around the active conversation's avatar */
+.main-container:not(.main-page) mw-main-nav mws-conversation-list-item .list-item.selected mws-conversation-avatar,
+.main-container:not(.main-page) mw-main-nav mws-conversation-list-item .list-item[aria-selected="true"] mws-conversation-avatar {
+  border-radius: 50% !important;
+  box-shadow: 0 0 0 2px #1a73e8 !important;
+}
+
+body.dark-theme .main-container:not(.main-page) mw-main-nav mws-conversation-list-item .list-item.selected mws-conversation-avatar,
+body.dark-theme .main-container:not(.main-page) mw-main-nav mws-conversation-list-item .list-item[aria-selected="true"] mws-conversation-avatar {
+  box-shadow: 0 0 0 2px #8ab4f8 !important;
+}
+
+/* Unread indicator dot on inactive avatars in the icon rail */
+.main-container:not(.main-page) mw-main-nav mws-conversation-list-item .list-item[data-e2e-is-unread="true"]:not(.selected):not([aria-selected="true"]) .avatar-container::after {
+  content: "" !important;
+  position: absolute !important;
+  top: 0 !important;
+  right: 0 !important;
+  width: 10px !important;
+  height: 10px !important;
+  border-radius: 50% !important;
+  background-color: #1a73e8 !important;
+  box-shadow: 0 0 0 2px var(--main-nav-host-bg-color, #fff) !important;
+  pointer-events: none !important;
+}
+
+body.dark-theme .main-container:not(.main-page) mw-main-nav mws-conversation-list-item .list-item[data-e2e-is-unread="true"]:not(.selected):not([aria-selected="true"]) .avatar-container::after {
+  background-color: #8ab4f8 !important;
+  box-shadow: 0 0 0 2px #131314 !important;
+}
+
+/* ==========================================================================
+   Hide Redundant Chat Heads & Reclaim Message Bubble Width
+   ========================================================================== */
+
+/* Hide the 40px participant avatar and the 40px empty bundle spacer on incoming messages */
+mws-message-wrapper [data-e2e-message-wrapper-core] > mws-avatar,
+mws-message-wrapper [data-e2e-message-wrapper-core] > .empty-avatar-space,
+mws-typing-indicators mws-avatar {
+  display: none !important;
+}
+
+/* Compact asymmetric margins (~1 icon width on the opposite side) so bubbles
+   are clearly left/right aligned while using maximum horizontal space */
+mws-message-wrapper:not(.outgoing) {
+  margin-left: 8px !important;
+  margin-right: 30px !important;
+  position: relative !important;
+}
+
+mws-message-wrapper.outgoing {
+  margin-left: 30px !important;
+  margin-right: 8px !important;
+  position: relative !important;
+}
+
+/* Raise hovered/focused message wrapper so its floating action bar renders above the next message */
+mws-message-wrapper:hover,
+mws-message-wrapper:focus-within {
+  z-index: 30 !important;
+}
+
+mws-message-wrapper:not(.outgoing) .msg-part {
+  margin-left: 0 !important;
+}
+
+mws-message-wrapper .part-content-container {
+  max-width: 100% !important;
+}
+
+mws-message-wrapper:not(.outgoing) .msg-status {
+  margin-left: 8px !important;
+}
+
+mws-message-wrapper.outgoing .msg-status {
+  margin-right: 8px !important;
+}
+
+mws-message-wrapper:not(.outgoing) .participant-display-name {
+  padding-left: 8px !important;
+}
+
+/* ==========================================================================
+   Floating Message Action Bar (React, Reply, Copy, Delete) Over Bottom Edge
+   ========================================================================== */
+
+.msg-focus-element,
+.text-msg-container,
+.image-msg-container,
+.reply-msg-container,
+.vcard-msg-container,
+.mms-msg-container {
+  position: relative !important;
+  overflow: visible !important;
+}
+
+/* Remove reserved horizontal width and float over the bottom of the message */
+mws-message-actions,
+mws-message-actions.msg-action-menu-reserved-width {
+  position: absolute !important;
+  bottom: -14px !important;
+  left: 4px !important;
+  right: auto !important;
+  width: auto !important;
+  min-width: 0 !important;
+  height: 28px !important;
+  padding: 0 3px !important;
+  gap: 1px !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  background-color: rgba(255, 255, 255, 0.96) !important;
+  border: 1px solid rgba(128, 134, 139, 0.28) !important;
+  border-radius: 999px !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.16) !important;
+  z-index: 40 !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transition: opacity 0.12s ease !important;
+}
+
+/* Outgoing messages: align floating action bar to the right side of the bubble */
+.outgoing mws-message-actions,
+mws-message-actions.outgoing {
+  left: auto !important;
+  right: 4px !important;
+  flex-direction: row !important;
+}
+
+body.dark-theme mws-message-actions {
+  background-color: rgba(38, 39, 43, 0.96) !important;
+  border-color: rgba(255, 255, 255, 0.16) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.45) !important;
+}
+
+/* Invisible hover bridge so moving the cursor from bubble to bottom-hanging bar never drops hover */
+mws-message-actions::before {
+  content: "" !important;
+  position: absolute !important;
+  top: -10px !important;
+  bottom: -2px !important;
+  left: -4px !important;
+  right: -4px !important;
+  z-index: -1 !important;
+}
+
+/* Show floating bar when hovering/focusing the message or the bar itself */
+.msg-focus-element:hover mws-message-actions:not(:empty),
+.msg-focus-element:focus mws-message-actions:not(:empty),
+.msg-focus-element.is-focused mws-message-actions:not(:empty),
+mws-message-actions:hover:not(:empty) {
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+/* Ensure wrapper components inside mws-message-actions match the 26x26 button height */
+mws-message-actions mw-message-reactions-menu,
+mws-message-actions mws-reply-to-message-button-wrapper,
+mws-message-actions mws-reply-to-message-button {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 26px !important;
+  height: 26px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Uniform compact 26x26 icon buttons inside the floating action pill */
+mws-message-actions button:not(.menu-trigger):not([data-e2e-message-action-menu]),
+mws-message-actions .mat-mdc-icon-button.mat-mdc-button-base:not(.menu-trigger):not([data-e2e-message-action-menu]),
+mws-message-actions .reaction-button.mat-mdc-icon-button.mat-mdc-button-base,
+mws-message-actions .reply-button.mat-mdc-icon-button.mat-mdc-button-base,
+mws-message-actions .bettermessages-action-btn {
+  width: 26px !important;
+  min-width: 26px !important;
+  height: 26px !important;
+  min-height: 26px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: none !important;
+  border-radius: 50% !important;
+  background: transparent !important;
+  color: var(--msg-actions-menu-fill-color, #5f6368) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  box-sizing: border-box !important;
+  vertical-align: middle !important;
+}
+
+/* Hide the original 3-dots menu trigger button (replaced by Copy & Delete icons) */
+mws-message-actions button.menu-trigger,
+mws-message-actions button.menu-trigger.mat-mdc-icon-button.mat-mdc-button-base,
+mws-message-actions button[data-e2e-message-action-menu] {
+  display: none !important;
+}
+
+body.dark-theme mws-message-actions button,
+body.dark-theme mws-message-actions .bettermessages-action-btn {
+  color: #c4c7c5 !important;
+}
+
+mws-message-actions button:hover,
+mws-message-actions .bettermessages-action-btn:hover {
+  background-color: rgba(128, 134, 139, 0.16) !important;
+}
+
+mws-message-actions .bettermessages-delete-btn:hover {
+  color: #d93025 !important;
+  background-color: rgba(217, 48, 37, 0.12) !important;
+}
+
+body.dark-theme mws-message-actions .bettermessages-delete-btn:hover {
+  color: #f28b82 !important;
+  background-color: rgba(242, 139, 130, 0.16) !important;
+}
+
+mws-message-actions mws-icon,
+mws-message-actions svg {
+  width: 18px !important;
+  height: 18px !important;
+  line-height: 18px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+mws-message-actions .mat-mdc-button-touch-target {
+  width: 26px !important;
+  height: 26px !important;
+}
+
+
+/* "Copied code 123456" toast for auto-copied verification codes */
+#bettermessages-toast {
+  position: fixed;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: #323232;
+  color: #fff;
+  font: 500 13px/1.4 "Google Sans", Roboto, system-ui, sans-serif;
+  padding: 8px 16px;
+  border-radius: 999px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  z-index: 100000;
+  white-space: nowrap;
+}
+
+#bettermessages-toast.visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
