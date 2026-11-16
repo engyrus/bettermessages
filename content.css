@@ -1,3 +1,4 @@
+html.bettermessages-active {
 /* Compact icon-only Start Chat button next to the Google Account icon */
 mw-fab-link.start-chat {
   margin: 0 6px 0 0 !important;
@@ -425,4 +426,5 @@ mws-message-actions .mat-mdc-button-touch-target {
 #bettermessages-toast.visible {
   opacity: 1;
   transform: translateX(-50%) translateY(0);
+}
 }

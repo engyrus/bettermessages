@@ -1,3 +1,13 @@
+(() => {
+const isInBetterMessages =
+  window !== window.top &&
+  Array.from(window.location.ancestorOrigins || []).some((origin) =>
+    origin.startsWith('chrome-extension://')
+  );
+if (!isInBetterMessages) return;
+
+document.documentElement.classList.add('bettermessages-active');
+
 const LAST_CONV_STORAGE_KEY = 'bettermessages_last_conv';
 
 const CLIPBOARD_SVG = `
@@ -547,14 +557,113 @@ function watchForVerificationCodes() {
   });
 }
 
+const AUTO_RESET_GUARD_KEY = 'bettermessages_auto_reset_done';
+let autoResetTimer = null;
+let autoResetTriggered = false;
+
+function isTryingToReachPhoneScreen() {
+  if (window === window.top) return false;
+  const hasUnpairButton = Array.from(
+    document.querySelectorAll('button, a, [role="button"]')
+  ).some(
+    (el) =>
+      el.offsetParent !== null &&
+      /^unpair$/i.test((el.textContent || '').trim())
+  );
+  if (!hasUnpairButton) return false;
+  return /trying to reach your phone/i.test(document.body?.innerText || '');
+}
+
+function deleteDatabaseAsync(name) {
+  return new Promise((resolve) => {
+    try {
+      const req = indexedDB.deleteDatabase(name);
+      req.onsuccess = resolve;
+      req.onerror = resolve;
+      req.onblocked = resolve;
+    } catch (_) {
+      resolve();
+    }
+  });
+}
+
+async function clearPartitionedStorageAndReload() {
+  if (autoResetTriggered) return;
+  autoResetTriggered = true;
+
+  try {
+    localStorage.clear();
+    sessionStorage.clear();
+    // Set the guard after clearing sessionStorage so reload won't loop
+    sessionStorage.setItem(AUTO_RESET_GUARD_KEY, '1');
+  } catch (_) {}
+
+  const tasks = [];
+  if (typeof indexedDB?.databases === 'function') {
+    tasks.push(
+      indexedDB
+        .databases()
+        .then((dbs) => Promise.all(dbs.map((db) => db.name && deleteDatabaseAsync(db.name))))
+        .catch(() => {})
+    );
+  }
+  if (typeof caches?.keys === 'function') {
+    tasks.push(
+      caches
+        .keys()
+        .then((keys) => Promise.all(keys.map((key) => caches.delete(key))))
+        .catch(() => {})
+    );
+  }
+  if (navigator.serviceWorker?.getRegistrations) {
+    tasks.push(
+      navigator.serviceWorker
+        .getRegistrations()
+        .then((regs) => Promise.all(regs.map((reg) => reg.unregister())))
+        .catch(() => {})
+    );
+  }
+
+  // Bound cleanup wait so an open IDB connection can't block the reload
+  await Promise.race([
+    Promise.all(tasks),
+    new Promise((resolve) => setTimeout(resolve, 1000)),
+  ]);
+
+  location.reload();
+}
+
+function checkTryingToReachPhone() {
+  if (window === window.top || autoResetTriggered) return;
+  try {
+    if (sessionStorage.getItem(AUTO_RESET_GUARD_KEY)) return;
+  } catch (_) {}
+
+  if (isTryingToReachPhoneScreen()) {
+    if (!autoResetTimer) {
+      autoResetTimer = setTimeout(() => {
+        autoResetTimer = null;
+        if (isTryingToReachPhoneScreen()) {
+          clearPartitionedStorageAndReload();
+        }
+      }, 1000);
+    }
+  } else if (autoResetTimer) {
+    clearTimeout(autoResetTimer);
+    autoResetTimer = null;
+  }
+}
+
 function handleDomMutations() {
   trackAndRestoreConversation();
   relocateStartChatButton();
   syncConversationRailTooltips();
   expandMessageActionMenus();
   watchForVerificationCodes();
+  checkTryingToReachPhone();
 }
 
 const observer = new MutationObserver(handleDomMutations);
 observer.observe(document.documentElement, { childList: true, subtree: true });
 handleDomMutations();
+})();
